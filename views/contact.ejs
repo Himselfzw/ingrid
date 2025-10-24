@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./components/head', { title: 'Contact - Ingrid Chemicals' }) %>
+<body>
+  <%- include('./components/header', { currentPage: 'contact' }) %>
+
+  <%- include('./components/hero', { heroTitle: 'Get In Touch', heroSubtitle: 'Ready to discuss your mining chemical and equipment needs? Our expert team is here to help you find the perfect solutions for your operations.' }) %>
+
+  <!-- Breadcrumb Navigation -->
+  <nav aria-label="breadcrumb" class="bg-light py-2">
+    <div class="container">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Contact</li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Contact Section -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+        <!-- Contact Form -->
+        <div class="col-lg-8 mb-5">
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <h3 class="card-title mb-4">Send us a Message</h3>
+              <form id="contactForm" action="/contact" method="POST" novalidate>
+                <%- include('./components/csrf_input') %>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="firstName" required aria-describedby="firstNameHelp">
+                    <div class="invalid-feedback">Please provide your first name.</div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="lastName" required>
+                    <div class="invalid-feedback">Please provide your last name.</div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                  <input type="email" class="form-control" id="email" required>
+                  <div class="invalid-feedback">Please provide a valid email address.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="company" class="form-label">Company</label>
+                  <input type="text" class="form-control" id="company">
+                </div>
+                <div class="mb-3">
+                  <label for="phone" class="form-label">Phone Number</label>
+                  <input type="tel" class="form-control" id="phone">
+                </div>
+                <div class="mb-3">
+                  <label for="subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                  <select class="form-select" id="subject" required>
+                    <option value="">Choose a subject</option>
+                    <option value="product-inquiry">Product Inquiry</option>
+                    <option value="technical-support">Technical Support</option>
+                    <option value="pricing">Pricing Information</option>
+                    <option value="partnership">Partnership Opportunities</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <div class="invalid-feedback">Please select a subject.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="message" rows="5" required placeholder="Please describe your inquiry in detail..."></textarea>
+                  <div class="invalid-feedback">Please provide a message.</div>
+                </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="newsletter" checked>
+                  <label class="form-check-label" for="newsletter">
+                    Subscribe to our newsletter for industry updates and product announcements
+                  </label>
+                </div>
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                  <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                  Send Message
+                </button>
+              </form>
+
+              <!-- Success/Error Messages -->
+              <div id="formMessage" class="mt-3 d-none"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="col-lg-4">
+          <div class="contact-info-sidebar">
+            <!-- Contact Details -->
+            <div class="card shadow-sm mb-4">
+              <div class="card-body">
+                <h4 class="card-title mb-3">Contact Information</h4>
+                <div class="contact-item d-flex align-items-start mb-3">
+                  <div class="contact-icon text-primary me-3">
+                    <i class="bi bi-geo-alt-fill"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1">Address</h6>
+                    <p class="mb-0 small"><%= content.contactAddress || 'Ingrid Chemicals (Pty) Ltd<br>JWX2+56J<br>Kadoma<br>Zimbabwe' %></p>
+                  </div>
+                </div>
+                <div class="contact-item d-flex align-items-start mb-3">
+                  <div class="contact-icon text-primary me-3">
+                    <i class="bi bi-telephone-fill"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1">Phone</h6>
+                    <p class="mb-0 small"><%= content.contactPhone || '+1 (555) 123-4567' %></p>
+                  </div>
+                </div>
+                <div class="contact-item d-flex align-items-start mb-3">
+                  <div class="contact-icon text-primary me-3">
+                    <i class="bi bi-envelope-fill"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1">Email</h6>
+                    <p class="mb-0 small"><%= content.contactEmail || 'info@ingridchemicals.com' %></p>
+                  </div>
+                </div>
+                <div class="contact-item d-flex align-items-start">
+                  <div class="contact-icon text-primary me-3">
+                    <i class="bi bi-clock-fill"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1">Business Hours</h6>
+                    <div class="mb-0 small">
+                      <% if (content.businessHours && content.businessHours.days && content.businessHours.days.length > 0) { %>
+                        <% const dayLabels = { monday: 'Mon', tuesday: 'Tue', wednesday: 'Wed', thursday: 'Thu', friday: 'Fri', saturday: 'Sat', sunday: 'Sun' }; %>
+                        <% content.businessHours.days.forEach(day => { %>
+                          <% if (!day.isClosed) { %>
+                            <%= dayLabels[day.day] %>: <%= day.openTime %> - <%= day.closeTime %><br>
+                          <% } else { %>
+                            <%= dayLabels[day.day] %>: Closed<br>
+                          <% } %>
+                        <% }); %>
+                        <% if (content.businessHours.holidays && content.businessHours.holidays.length > 0) { %>
+                          <br><strong>Holidays:</strong><br>
+                          <% content.businessHours.holidays.forEach(holiday => { %>
+                            <%= holiday.name %> (<%= new Date(holiday.date).toLocaleDateString() %>): <%= holiday.isClosed ? 'Closed' : (holiday.customHours ? holiday.customHours.openTime + ' - ' + holiday.customHours.closeTime : 'Open') %><br>
+                          <% }); %>
+                        <% } %>
+                      <% } else { %>
+                        <%= content.contactHours || 'Mon - Fri: 8:00 AM - 6:00 PM<br>Sat: 9:00 AM - 2:00 PM<br>Sun: Closed' %>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Map -->
+            <div class="card shadow-sm">
+              <div class="card-body p-0">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3588.486!2d29.9153!3d-18.5333!2m3!1f0!2f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1931a4e7c7e9e1c3%3A0x4c4c4c4c4c4c4c4c!2sKadoma%2C%20Zimbabwe!5e0!3m2!1sen!2szw!4v1640992800000!5m2!1sen!2szw"
+                  width="100%"
+                  height="250"
+                  style="border:0;"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  title="Ingrid Chemicals Location - Kadoma, Zimbabwe">
+                </iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include('./components/footer') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Form validation and submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const form = this;
+      const submitBtn = document.getElementById('submitBtn');
+      const spinner = submitBtn.querySelector('.spinner-border');
+      const messageDiv = document.getElementById('formMessage');
+
+      // Show loading state
+      submitBtn.disabled = true;
+      spinner.classList.remove('d-none');
+      messageDiv.classList.add('d-none');
+
+      // Client-side validation
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        submitBtn.disabled = false;
+        spinner.classList.add('d-none');
+        return;
+      }
+
+      // Collect form data
+      const formData = new FormData(form);
+      const data = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        company: document.getElementById('company').value,
+        phone: document.getElementById('phone').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value,
+        newsletter: document.getElementById('newsletter').checked,
+        _csrf: formData.get('_csrf') // Include CSRF token
+      };
+
+      // Send form data via AJAX
+      fetch('/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Hide loading state
+        submitBtn.disabled = false;
+        spinner.classList.add('d-none');
+
+        if (data.success) {
+          // Track successful contact form submission
+          trackContactForm();
+
+          // Show success message
+          messageDiv.classList.remove('d-none');
+          messageDiv.className = 'alert alert-success mt-3';
+          messageDiv.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>' + data.message;
+
+          // Reset form
+          form.reset();
+          form.classList.remove('was-validated');
+        } else {
+          // Show error message
+          messageDiv.classList.remove('d-none');
+          messageDiv.className = 'alert alert-danger mt-3';
+          messageDiv.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>Failed to send message. Please try again.';
+        }
+
+        // Scroll to message
+        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Hide loading state
+        submitBtn.disabled = false;
+        spinner.classList.add('d-none');
+
+        // Show error message
+        messageDiv.classList.remove('d-none');
+        messageDiv.className = 'alert alert-danger mt-3';
+        messageDiv.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2"></i>Failed to send message. Please try again.';
+
+        // Scroll to message
+        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+
+    // Real-time validation feedback
+    const inputs = document.querySelectorAll('#contactForm input, #contactForm select, #contactForm textarea');
+    inputs.forEach(input => {
+      input.addEventListener('blur', function() {
+        if (this.checkValidity()) {
+          this.classList.remove('is-invalid');
+          this.classList.add('is-valid');
+        } else {
+          this.classList.remove('is-valid');
+          this.classList.add('is-invalid');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
